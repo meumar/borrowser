@@ -1,0 +1,67 @@
+
+<div >
+    <div class='navi'>
+        <ul class='navUl'>
+            <li class='navLi' (click)='navigateNav("user")'><span class="material-icons">home</span>Home</li>
+            <li class='navLi activeElement' (click)="refresh()"><span class="material-icons">call_made</span>Sent Requests</li>
+            <li class='navLi' (click)='navigateNav("receivedRequests")' ><span class="material-icons">call_received</span>Received Requests</li>
+            <li class='navLi' (click)='navigateNav("transactions")'><span class="material-icons">repeat </span>Transactions</li>
+            <li class='navLi' (click)='navigateNav("notifications")'><span class="material-icons">notifications</span>Notifications</li>
+            <button class='navBtn' (click)="onLogout()">Log-Out</button>
+            <button class='navBtn' (click)='navigateNav("lenders")' >Lenders</button>
+        </ul>
+    </div>
+    <div class='container'>
+        <div class='requests'>
+            <ul class='requestsList' style="list-style-type: none;">
+                <br />
+                <li class='col col-12'>
+                    <b>
+                        <span class='requestSNo col-1'>S.No</span>
+                        <span class='requestStatus col-4'>Status</span>
+                        <span class='requestTenure col-2'>Tenure</span>
+                        <span class='requestAmount col-2'>Amount</span>
+                        <span class='requestName col-3'>Name</span>
+                        <hr />
+                    </b>
+                </li>
+                <div class="scroll">
+                    <div  *ngIf="responseErrorNote">
+                        <li><small class='text-danger'>{{responseNoteValue}}</small></li>
+                    </div>
+                    <div  *ngIf="!responseErrorNote">
+                        <li *ngFor="let request of sentRequests; let i=index"  class='col col-md-12'>
+                            <span>
+                                 <span class='requestSNo col-1'>{{i+1}}</span>
+                                 <span class='requestStatus  col-4'>
+                                     <b>
+                                     <span *ngIf="request?.requestStatus == 1">
+                                         <span style='color:rgb(255, 166, 1)'>Pending</span>
+                                     </span>
+                                     <span *ngIf="request?.requestStatus == 2">
+                                         <span class="text-success">Paid</span>
+                                     </span>
+                                     <span *ngIf="request?.requestStatus == 3">
+                                         <span class="text-danger">Rejected</span>
+                                     </span>
+                                     <span *ngIf="request?.requestStatus == 4">
+                                         <span style='color:rgb(240, 106, 58)'> Requested Repay</span>
+                                     </span>
+                                     <span *ngIf="request?.requestStatus == 5">
+                                         <span class="text-primary">Repaid</span>
+                                     </span>
+                                     </b>
+                                 </span>
+                                 <span class='requestTenure  col-2'>{{request?.tenure}}<small> (months)</small></span>
+                                 <span class='requestAmount  col-2'><span>&#x20B9;</span>{{request?.loanAmount}}/-</span>
+                                 <span class='requestName col-3'>{{request?.lenderName}}</span>
+                            </span>
+                            <hr />
+                         </li>
+                    </div>
+                </div>
+                <br />
+            </ul>
+        </div>
+    </div>
+</div>

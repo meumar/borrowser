@@ -1,0 +1,37 @@
+
+
+<div >
+    <div class='navi'>
+        <ul class='navUl'>
+            <li class='navLi' (click)='navigateNav("user")'><span class="material-icons">home</span>Home</li>
+            <li class='navLi' (click)='navigateNav("sentRequests")'><span class="material-icons">call_made</span>Sent Requests</li>
+            <li class='navLi' (click)='navigateNav("receivedRequests")' ><span class="material-icons">call_received</span>Received Requests</li>
+            <li class='navLi' (click)='navigateNav("transactions")'><span class="material-icons">repeat </span>Transactions</li>
+            <li class='navLi activeElement' (click)="refresh()"><span class="material-icons">notifications</span>Notifications</li>
+            <button class='navBtn' (click)="onLogout()">Log-Out</button>
+            <button class='navBtn' (click)='navigateNav("lenders")' >Lenders</button>
+        </ul>
+    </div>
+    <div class='container'>
+        <div class='requests'>
+            <br />
+            <p style="text-align:center;color:teal;"><b>Rejected Notifications</b></p>
+            <hr />
+            <ul class="scroll" style="list-style-type: none;">
+                <div  *ngIf="responseErrorNote">
+                    <small class='text-danger'>{{responseNoteValue}}</small>
+                </div>
+                <div  *ngIf="!responseErrorNote" >
+                    <li *ngFor="let request of sentRequests; let i=index"  class='col col-md-12'>
+                        <div class='notification' *ngIf="request?.requestStatus == 3">
+                            <b class='text-danger notificationHeader'>Rejected</b>
+                            <small>{{request?.lenderName.toUpperCase()}} rejected your request of amount {{request?.loanAmount}}</small>
+                        </div>
+                        <hr />
+                    </li>
+                </div>
+            </ul>
+            <br />
+        </div>
+    </div>
+</div>

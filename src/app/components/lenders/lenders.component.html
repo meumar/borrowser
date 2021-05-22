@@ -1,0 +1,112 @@
+
+<div >
+    <div class='navi'>
+        <ul class='navUl'>
+            <li class='navLi' (click)='navigateNav("user")'><span class="material-icons">home</span>Home</li>
+            <li class='navLi' (click)='navigateNav("sentRequests")'><span class="material-icons">call_made</span>Sent Requests</li>
+            <li class='navLi' (click)='navigateNav("receivedRequests")'><span class="material-icons">call_received</span>Received Requests</li>
+            <li class='navLi' (click)='navigateNav("transactions")'><span class="material-icons">repeat </span>Transactions</li>
+            <li class='navLi' (click)='navigateNav("notifications")'><span class="material-icons">notifications</span>Notifications</li>
+            <button class='navBtn' (click)="onLogout()">Log-Out</button>
+            <button class='navBtn' (click)="refresh()">Lenders</button>
+        </ul>
+    </div>
+    <div *ngIf="responseSuccessNote || responseErrorNote" class='response'>
+        <card *ngIf="responseErrorNote" class='errorResponse'>
+            {{responseNoteValue}}
+            <button (click)="onResponseCancel()" class="errorCancel">&times;</button>
+        </card>
+        <card *ngIf="responseSuccessNote" class="successResponse">
+            {{responseNoteValue}}
+            <button (click)="onResponseCancel()" class="successCancel">&times;</button>
+        </card>
+    </div>
+    <div class='container'>
+        <div class='lenders'>
+            <ul class='lendersList' style="list-style-type: none;">
+                <div >
+                    <br />
+                    <div class="search">
+                        <form class="col-12" [formGroup]="searchBox" (ngSubmit)="onSearchSubmit()">
+                            <div class='form-row rowStyle'>
+                                <input formControlName="name" type='text' class='form-control requestInput col-sm-3' placeholder="Search by name..">                
+                                <button type="submit" class='searchBtn'>Search</button>
+                                <button class='showAllBtn' (click)="onShowAll()">Show All</button>
+                            </div>
+                        </form>
+                    </div>
+                    <hr />
+                    <div class='col col-12'>
+                        <b>
+                            <span class='lenderSNo col-1'>S.No</span>
+                            <span class='lenderRequest col-3'>Request</span>
+                            <!--<span class='lenderContactNumber col-3'>Contact No</span>-->
+                            <span class='lenderUsername col-4'>Email-Id</span>
+                            <span class='lenderName col-4'>Name</span>
+                            <hr />
+                        </b>
+                    </div>
+                    <div class='scroll'>
+                        <li *ngFor="let lender of lenders; let i=index"  class='col col-md-12'>
+                            <span class='lenderSNo col-1'>{{i+1}}</span>
+                            <span class='lenderRequest  col-3'><button class=lenderButton (click)="openModalForLoan(lender,template)">Request</button></span>
+                            <!--<span class='lenderContactNumber  col-3'>{{lender?.contactNumber}}</span>-->
+                            <span class='lenderUsername  col-4'>{{lender?.username}}</span>
+                            <span class='lenderName col-4'>{{lender?.name}}</span>
+                            <hr />
+                        </li>
+                    </div>
+                    <br />
+                </div>
+                
+            </ul>
+        </div>
+    </div>
+    <ng-template #template>
+        <div>
+            <div class='modal-header'>
+                <h3 class='modal-headingText'><b>Loan Request</b></h3>
+                <button (click)="modalRef.hide()" class='modal-crossButton'><b>&times;</b></button>
+            </div>
+            <div class='fixedData'>
+                <span>
+                    <span class='col-sm-5'>Lender: </span><b class=' col-sm-7'>{{requestingLender.name.toUpperCase()}}</b>
+                </span>
+                <br />
+                <span>
+                    <span class='col-sm-5'>Interest: </span><b class=' col-sm-7'>6%<small> (fixed)</small></b>
+                </span>
+            </div>
+            <hr>
+            <form class="col-12" [formGroup]="loanRequestForm" (ngSubmit)="onLoadRequestSubmit()">
+                <div class='form-row rowStyle'>
+                    <label class='col-sm-3 col-form-label'>Amount:</label>
+                    <input formControlName="loanAmount" [class.is-invalid]="loanRequestForm.get('loanAmount').touched && loanRequestForm.get('loanAmount').invalid"
+                     type='number' class='form-control requestInput col-sm-9' placeholder="Rupees">
+                    <div class='errorDisp' *ngIf="loanRequestForm.get('loanAmount').invalid && loanRequestForm.get('loanAmount').touched">
+                        <small class='text-danger' *ngIf=" loanRequestForm.get('loanAmount').errors?.required">Required</small>
+                    </div>
+                </div>
+                <div class='form-row rowStyle'>
+                    <label class='col-sm-3 col-form-label'>Tenure:</label>
+                    <input formControlName="tenure" [class.is-invalid]="loanRequestForm.get('tenure').touched && loanRequestForm.get('tenure').invalid"
+                     type='number' class='form-control requestInput col-sm-9' placeholder="Months">
+                    <div class='errorDisp' *ngIf="loanRequestForm.get('tenure').invalid && loanRequestForm.get('tenure').touched">
+                        <small class='text-danger' *ngIf=" loanRequestForm.get('tenure').errors?.required">Required</small>
+                    </div>
+                </div>
+                <div class='form-row rowStyle'>
+                    <label class='col-sm-3 col-form-label'>Reason:</label>
+                    <textarea class="form-control col-sm-9" formControlName="loanReason" rows="3"></textarea>
+                    <div class='errorDisp' *ngIf="loanRequestForm.get('loanReason').invalid && loanRequestForm.get('loanReason').touched">
+                        <small class='text-danger' *ngIf=" loanRequestForm.get('loanReason').errors?.required">Required</small>
+                    </div>
+                </div>
+                <small class='text-danger errorDisp'>{{LoanRequestInvalidError}}</small>
+                <button type="submit" class='modalSubmit'>Request</button>
+                <pre>
+                </pre>
+            </form>
+        </div>
+    </ng-template>
+</div>
